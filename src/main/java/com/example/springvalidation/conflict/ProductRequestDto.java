@@ -14,7 +14,7 @@ public class ProductRequestDto {
     private String name;
 
     @NotNull
-//    @Range(min = 10, max = 10000)
+    @Range(min = 10, max = 10000)
     private Integer price;
 
     @NotNull
