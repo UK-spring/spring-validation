@@ -5,8 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 public class BindingResultController {
@@ -32,23 +35,30 @@ public class BindingResultController {
     ) {
 
         System.out.println("/V2/member API가 호출되었습니다.");
-        // 3. Validation 포인트 필드 검증 (null 또는 0보다 작으면 에러)
-        if (request.getPoint() == null || request.getPoint() < 0) {
-            // BindingResult FieldError 추가
-            bindingResult.addError(
-                    new FieldError("request", "point", "point 필드는 필수이며 0 이상의 값이어야 합니다.")
-            );
-        }
 
-        // Validation 이름 필드 검증
-        if (!StringUtils.hasText(request.getName())) {
-            // BindingResult FieldError 추가
-            bindingResult.addError(
-                    new FieldError("request", "name", "name 필드는 필수입니다.")
-            );
-        }
+        // BindingResult의 에러 출력
+        List<ObjectError> allErrors = bindingResult.getAllErrors();
+        System.out.println("allErrors = " + allErrors);
 
-        // Validation 나이 필드 검증 (null 또는 0보다 작으면 에러)
+        // Model에 저장
+        model.addAttribute("point", request.getPoint());
+        model.addAttribute("name", request.getName());
+        model.addAttribute("age", request.getAge());
+
+        return "complete";
+    }
+
+    @PostMapping("/v3/member")
+    public String createMemberV3(
+            // 1. @ModelAttribute 뒤에 2. BindingResult가 위치한다.
+            @ModelAttribute MemberCreateRequestDto request,
+            BindingResult bindingResult,
+            Model model
+    ) {
+
+        System.out.println("/V3/member API가 호출되었습니다.");
+
+        // 3. Validation
         if (request.getAge() == null || request.getAge() < 0) {
             // BindingResult FieldError 추가
             bindingResult.addError(
@@ -56,10 +66,12 @@ public class BindingResultController {
             );
         }
 
-        // 만약 BindingResult에 에러가 존재한다면, 다시 입력폼으로 이동
-        // if(bindingResult.hasErros()) {
-        //   return "form"
-        // }
+        // error 처리
+        if (bindingResult.hasErrors()) {
+            System.out.println("Error를 처리하는 로직");
+            // error 페이지 반환
+            return "error";
+        }
 
         // Model에 저장
         model.addAttribute("point", request.getPoint());
