@@ -11,6 +11,7 @@ public class TestDto {
     @NotBlank
     private String stringField;
 
+//    @NotNull(message = "메세지 수정 가능")
     @NotNull
     @Range(min = 1, max = 9999)
     private Integer integerField;
