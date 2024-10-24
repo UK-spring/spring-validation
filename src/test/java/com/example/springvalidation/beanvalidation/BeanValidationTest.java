@@ -21,7 +21,7 @@ public class BeanValidationTest {
 
         // Test 하고싶은 상황을 만들어서 검증 가능
         TestDto dto = new TestDto();
-        // 1. @Notnull 제약조건에 위반
+        // 1. @NotBlank 제약조건에 위반
         dto.setStringField(" ");
         // 2. @Range 제약조건에 위반
         dto.setIntegerField(10000);
