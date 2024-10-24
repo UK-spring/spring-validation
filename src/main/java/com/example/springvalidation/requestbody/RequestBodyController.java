@@ -13,7 +13,7 @@ public class RequestBodyController {
 
     @PostMapping("/example")
     public Object save(
-            @RequestBody @Validated ExampleRequestDto dto,
+            @Validated @RequestBody ExampleRequestDto dto,
             BindingResult bindingResult
     ) {
         log.info("RequestBody Controller 호출");
